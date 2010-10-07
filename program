@@ -1,0 +1,97 @@
+Sub ResetPosition()
+    ' Initialize the system, move all to zero to stop the whining
+
+    ' Reset the X position to 50% (centered)
+    SvNum = 0
+    Do While SvNum < 16
+        MoveServoScaled( SvNum, 8191, 10000 )
+        SvNum= SvNum + 2
+    Loop
+
+    ' Reset the Y Position (set to max for now b/c)
+    ' it is in the inverse position
+    SvNum = 1
+    Do While SvNum < 16
+        MoveServoScaled( SvNum, 0, 5000 )
+        SvNum = SvNum + 2
+    Loop
+End Sub
+
+Sub MaxPosY()
+    SvNum = 1
+    Do While SvNum < 16
+        MoveServoScaled( SvNum, 0, 5000 )
+        SvNum = SvNum + 2
+    Loop
+End Sub
+
+Sub CurlLeft(TentNum)
+    SvNum = TentNum * 2
+    MoveServoScaled( SvNum, 16383, 5000 )
+End Sub
+
+Sub CurlCenter(TentNum)
+    SvNum = TentNum * 2
+    MoveServoScaled( SvNum, 8191, 5000 )
+End Sub
+
+Sub CurlRight(TentNum)
+    SvNum = TentNum * 2
+    MoveServoScaled( SvNum, 0, 5000 )
+End Sub
+
+Sub CurlUp(TentNum)
+    SvNum = (TentNum * 2) + 1
+    MoveServoScaled( SvNum, 16383, 5000 )
+End Sub
+
+Sub CurlMiddle(TentNum)
+    SvNum = (TentNum * 2) + 1
+    MoveServoScaled( SvNum, 8191, 5000 )
+End Sub
+
+Sub CurlDown(TentNum)
+    SvNum = (TentNum * 2) + 1
+    MoveServoScaled( SvNum, 0, 5000 )
+End Sub
+
+Sub MaxCurl(TentNum)
+    ' This will curl the tent. to the max in the y direction
+    ' and should curve all the tentacles to their side
+    Call CurlUp(TentNum)
+    If TentNum < 4 Then
+        Call CurlLeft(TentNum)
+    Else
+        Call CurlRight(TentNum)
+    End If
+End Sub
+
+Sub MaxCurlAll()
+    for TenticalNum = 0 to 8
+        Call MaxCurl(TenticalNum)
+    next TenticalNum
+End Sub
+
+Sub CircleFlail()
+    Call ResetPosition()
+    Call MaxCurlAll()
+    Call DelaySec(1)
+    Call ResetPosition()
+End Sub
+
+Sub RandomTwitchAll()
+    For SvNum = 0 To 15 
+        MoveServoScaled( SvNum, RandRange(0,16383), 10000 )
+    Next SvNum
+End Sub
+
+
+Call ResetPosition()
+
+LoopNum = 1
+Do While LoopNum < 10
+    Call RandomTwitchAll()
+    LoopNum = LoopNum + 1
+Loop
+
+Call ResetPosition()
